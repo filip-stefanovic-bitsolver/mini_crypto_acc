@@ -1,4 +1,4 @@
-module ff_mem #(
+module ff_mem #( 
   parameter DW = 8,
   parameter AW = 4
 ) (
