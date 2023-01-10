@@ -1,0 +1,7 @@
+#!/bin/bash
+[ -d work ] && rm -rf work
+mkdir work
+cd work
+iverilog -g2012 ../rtl/pu.v ../tb/tb.v -o tb.o -D PU_DBG
+vvp tb.o
+cd ../
