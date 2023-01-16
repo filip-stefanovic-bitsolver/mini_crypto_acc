@@ -36,9 +36,11 @@ initial
     	
     #10ns;
     cs_n = 0;
-    
 
-    #1960ns;
+    #1930ns
+    mosi = 4'b0000;
+
+    #3920ns;
     cs_n = 1;
 
     
@@ -67,51 +69,29 @@ always
   begin
     #20ns;
     if(~cs_n)
-    begin
-    sclk = ~sclk;
-    mosi[0] = ~mosi[0];
-    
-    end
+      begin
+        sclk = ~sclk;
+        mosi[0] = ~mosi[0];
+      end
     //#10us;
     //$finish;
   end
 
-  
-
-  spi_data_path spi_data_path (  clk,
-                                 reset_n,
-                                 sclk,
-                                 cs_n,
-                                 mosi,
-                                 spi_mode,
-                                 rdata,
-                                 address_ready,
-                                 data_ready, 
-                                 miso,
-                                 addr,
-                                 status,
-                                 wdata
+spi_data_path spi_data_path (clk,
+                            reset_n,
+                            sclk,
+                            cs_n,
+                            mosi,
+                            spi_mode,
+                            rdata,
+                            address_ready,
+                            data_ready, 
+                            miso,
+                            addr,
+                            status,
+                            wdata
 );
-
 endmodule
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
