@@ -32,7 +32,7 @@ reg integer i_addr;
 reg integer i_status;
 reg integer i_wdata;
 reg integer i_miso;
-//reg integer i_miso_prvi;
+
 
 
 
