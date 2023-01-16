@@ -76,25 +76,7 @@ always
     //$finish;
   end
 
-   
-
- // always 
-  //begin
-  //  if (~cs_n)
-   //   begin
-    //    #20ns;
-     //   mosi[0] = ~mosi[0];
-    //  end
-    //else  begin
-    //  mosi[0] = mosi[0];
-   //   #10us;
-    //  $finish;
-   // end
-  //end  
-
-
-
-
+  
 
   spi_data_path spi_data_path (  clk,
                                  reset_n,
