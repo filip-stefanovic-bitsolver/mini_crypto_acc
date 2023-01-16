@@ -306,12 +306,12 @@ always @(posedge clk or negedge reset_n)
     end  
   else
     begin
-      if (cnt > 48)
+      if (cnt == 48)
         data_ready <= 1'b1;
       else 
         data_ready <= 1'b0;
 
-      if ((cnt > 24) && (~status[1]))
+      if (cnt == 24) 
         address_ready <= 1'b1;
       else 
         address_ready <= 1'b0;
