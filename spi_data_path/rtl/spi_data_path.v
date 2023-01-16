@@ -1,3 +1,4 @@
+
 module spi_data_path (input clk,
                       input reset_n,
                       input sclk,
@@ -50,11 +51,6 @@ always @(posedge clk or negedge reset_n)
     begin
       posedge_sclk <= 1'b0;
       negedge_sclk <= 1'b0;
-      i_addr <= 0;
-      i_status <= 0;
-      i_wdata <= 0;
-      //i_miso_prvi <= 0;
-      //i_miso <= 0;
       sclk_syn_1 <= 1'b0;
       sclk_syn_2 <= 1'b0;
       sclk_syn_3 <= 1'b0;
@@ -70,40 +66,6 @@ always @(posedge clk or negedge reset_n)
       cs_n_syn_2 <= cs_n_syn_1;
       negedge_sclk <= sclk_syn_2 && (~sclk_syn_3);
       posedge_sclk <= ~sclk_syn_2 && (sclk_syn_3);
-      //if (posedge_sclk && (cnt > 0) && (cnt <= 20))
-        //i_addr <= i_addr + 1;
-      //else 
-        //i_addr <= i_addr; 
-      //if (posedge_sclk && (cnt > 20 ) && (cnt < 25))
-       // i_status <= i_status + 1;
-      //else 
-        //i_status <= i_status; 
-      //if (posedge_sclk && (cnt > 32 ) && (cnt <= 48))
-        //i_wdata <= i_wdata + 1;
-      //else 
-        //i_wdata <= i_wdata;
-      //if (negedge_sclk && (cnt > 32 ) && (cnt <= 48))begin
-       // i_miso_prvi <= i_miso_prvi + 1;
-       // i_miso <= i_miso_prvi;end
-      //else begin
-        //i_miso_prvi <= i_miso_prvi;
-        //i_miso <= i_miso_prvi;end
-      //if ((cnt > 48 ) || (cnt <= 32))
-        //i_miso <= 110;
-      //else 
-        //i_miso <= i_miso;
-      if ((cnt > 20 ) || (cnt < 1))
-        i_addr <= 0;
-      else 
-        i_addr <= i_addr;
-      if ((cnt >= 21 ) || (cnt <= 24))
-        i_status <= 0;
-      else 
-        i_status <= i_status;
-      if ((cnt > 48 ) || (cnt <= 32))
-        i_wdata <= 0;
-      else 
-        i_wdata <= i_wdata;
     end
 
 
@@ -135,21 +97,24 @@ always @(posedge clk or negedge reset_n)
 //description of addr register
   always @(posedge clk or negedge reset_n)
   if (~reset_n)
+    begin
       addr <= 20'h00000;
+      i_addr <= 1'b0;
+    end
   else
     begin
       if ((cnt <= 20) && (cnt > 0))
         begin
-          if ((mod_1 && posedge_sclk ) &&
-             (~(  mod_2 && posedge_sclk  )) &&
-             (~(  mod_4 && posedge_sclk  )))
+          if ((mod_1 && negedge_sclk ) &&
+             (~(  mod_2 && negedge_sclk  )) &&
+             (~(  mod_4 && negedge_sclk  )))
              begin
             addr[i_addr] <= mosi[0]; 
             i_addr <= i_addr + 1; 
              end
-          else if (~(mod_1 && posedge_sclk ) &&
-             (~(  mod_2 && posedge_sclk  )) &&
-             ((  mod_4 && posedge_sclk  )))
+          else if (~(mod_1 && negedge_sclk ) &&
+             (~(  mod_2 && negedge_sclk  )) &&
+             ((  mod_4 && negedge_sclk  )))
             begin
             addr[i_addr] <= mosi[0];
             addr[i_addr + 1] <= mosi[1]; 
@@ -157,9 +122,9 @@ always @(posedge clk or negedge reset_n)
             addr[i_addr + 3] <= mosi[3];
             i_addr <= i_addr + 4; 
             end
-          else if (~(mod_1 && posedge_sclk ) &&
-             (( mod_2 && posedge_sclk )) &&
-             (~(  mod_4 && posedge_sclk  )))
+          else if (~(mod_1 && negedge_sclk ) &&
+             (( mod_2 && negedge_sclk )) &&
+             (~(  mod_4 && negedge_sclk  )))
             begin
             addr[i_addr] <= mosi[0];
             addr[i_addr + 1] <= mosi[1]; 
@@ -169,48 +134,57 @@ always @(posedge clk or negedge reset_n)
             addr <= addr; 
         end
       else
-         addr <= addr;  
+        begin
+         addr <= addr; 
+         i_addr <= 0; 
+        end
     end
 
 
 //description of status register
 always @(posedge clk or negedge reset_n)
   if(~reset_n)
+    begin
       status <= 4'b0000;
+      i_status <= 0;
+    end  
   else
     begin
       if ((cnt <= 24) && (cnt > 20))
         begin
-          if ((mod_1 && posedge_sclk ) &&
-             (~(  mod_2 && posedge_sclk  )) &&
-             (~(  mod_4 && posedge_sclk  )))
-             begin
-            status[i_status] <= mosi[0]; 
-            i_status <= i_status + 1; 
+          if ((mod_1 && negedge_sclk ) &&
+             (~(  mod_2 && negedge_sclk  )) &&
+             (~(  mod_4 && negedge_sclk  )))
+            begin
+              status[i_status] <= mosi[0]; 
+              i_status <= i_status + 1; 
              end
-          else if (~(mod_1 && posedge_sclk ) &&
-             (~(  mod_2 && posedge_sclk  )) &&
-             ((  mod_4 && posedge_sclk  )))
+          else if (~(mod_1 && negedge_sclk ) &&
+             (~(  mod_2 && negedge_sclk  )) &&
+             ((  mod_4 && negedge_sclk  )))
             begin
-            status[i_status] <= mosi[0];
-            status[i_status + 1] <= mosi[1]; 
-            status[i_status + 2] <= mosi[2];
-            status[i_status + 3] <= mosi[3];
-            i_status <= i_status + 4; 
+              status[i_status] <= mosi[0];
+              status[i_status + 1] <= mosi[1]; 
+              status[i_status + 2] <= mosi[2];
+              status[i_status + 3] <= mosi[3];
+              i_status <= i_status + 4; 
             end
-          else if (~(mod_1 && posedge_sclk ) &&
-             (( mod_2 && posedge_sclk )) &&
-             (~(  mod_4 && posedge_sclk  )))
+          else if (~(mod_1 && negedge_sclk ) &&
+             (( mod_2 && negedge_sclk )) &&
+             (~(  mod_4 && negedge_sclk  )))
             begin
-            status[i_status] <= mosi[0];
-            addr[i_addr + 1] <= mosi[1]; 
-            i_status <= i_status + 2; 
+              status[i_status] <= mosi[0];
+              addr[i_addr + 1] <= mosi[1]; 
+              i_status <= i_status + 2; 
             end
-            else
+          else
             status <= status; 
         end
       else
-         status <= status;  
+        begin
+         status <= status; 
+         i_status <= 0; 
+        end
     end
 
 
@@ -218,41 +192,47 @@ always @(posedge clk or negedge reset_n)
 //description of wdata register
 always @(posedge clk or negedge reset_n)
   if(~reset_n)
+    begin
       wdata <= 16'h0000;
+      i_wdata <= 0;
+    end
   else
     begin
       if ((cnt <= 48) && (cnt > 32))
         begin
-          if ((mod_1 && posedge_sclk ) &&
-             (~(  mod_2 && posedge_sclk  )) &&
-             (~(  mod_4 && posedge_sclk  )))
-             begin
-            wdata[i_wdata] <= mosi[0]; 
-            i_wdata <= i_wdata + 1; 
-             end
-          else if (~(mod_1 && posedge_sclk ) &&
-             (~(  mod_2 && posedge_sclk  )) &&
-             ((  mod_4 && posedge_sclk  )))
+          if ((mod_1 && negedge_sclk && status[2] ) &&
+             (~(  mod_2 && negedge_sclk && status[2]  )) &&
+             (~(  mod_4 && negedge_sclk && status[2]  )))
             begin
-            wdata[i_wdata] <= mosi[0];
-            wdata[i_wdata + 1] <= mosi[1]; 
-            wdata[i_wdata + 2] <= mosi[2];
-            wdata[i_wdata + 3] <= mosi[3];
-            i_wdata <= i_wdata + 4; 
+              wdata[i_wdata] <= mosi[0]; 
+              i_wdata <= i_wdata + 1; 
             end
-          else if (~(mod_1 && posedge_sclk ) &&
-             (( mod_2 && posedge_sclk )) &&
-             (~(  mod_4 && posedge_sclk  )))
+          else if (~(mod_1 && negedge_sclk && status[2] ) &&
+             (~(  mod_2 && negedge_sclk && status[2]  )) &&
+             ((  mod_4 && negedge_sclk && status[2]  )))
             begin
-            wdata[i_wdata] <= mosi[0];
-            wdata[i_wdata + 1] <= mosi[1]; 
-            i_wdata <= i_wdata + 2; 
+              wdata[i_wdata] <= mosi[0];
+              wdata[i_wdata + 1] <= mosi[1]; 
+              wdata[i_wdata + 2] <= mosi[2];
+              wdata[i_wdata + 3] <= mosi[3];
+              i_wdata <= i_wdata + 4; 
             end
-            else
+          else if (~(mod_1 && negedge_sclk && status[2] ) &&
+             (( mod_2 && negedge_sclk && status[2] )) &&
+             (~(  mod_4 && negedge_sclk && status[2]  )))
+            begin
+              wdata[i_wdata] <= mosi[0];
+              wdata[i_wdata + 1] <= mosi[1]; 
+              i_wdata <= i_wdata + 2; 
+            end
+          else
             wdata <= wdata; 
         end
       else
-         wdata <= wdata;  
+        begin
+         wdata <= wdata; 
+         i_wdata <= 0;
+        end
     end
 
 
@@ -271,9 +251,11 @@ always @(posedge clk or negedge reset_n)
 
 //description of miso register
 always @(posedge clk or negedge reset_n)
-  if(~reset_n)begin
+  if(~reset_n)
+    begin
       miso <= 4'b0000;
-      i_miso <= 0;end
+      i_miso <= 0;
+    end
   else
     begin
       if ((cnt <= 48) && (cnt > 32))
@@ -281,34 +263,38 @@ always @(posedge clk or negedge reset_n)
           if ((cnt == (i_miso + 33) && mod_1 && posedge_sclk ) &&
              (~(  mod_2 && posedge_sclk  )) &&
              (~(  mod_4 && posedge_sclk  )))
-             begin
-            miso[0] <= d[i_miso]; 
+            begin
+              miso[0] <= d[i_miso]; 
             
-            i_miso <= i_miso + 1; 
-             end
+              i_miso <= i_miso + 1; 
+            end
           else if (~(mod_1 && posedge_sclk ) &&
              (~(  mod_2 && posedge_sclk  )) &&
              (( cnt == (i_miso + 36) && mod_4 && posedge_sclk  )))
             begin
-            miso[0] <= d[i_miso];
-            miso[1] <= d[i_miso + 1]; 
-            miso[2] <= d[i_miso + 2];
-            miso[3] <= d[i_miso + 3];
-            i_miso <= i_miso + 4; 
+              miso[0] <= d[i_miso];
+              miso[1] <= d[i_miso + 1]; 
+              miso[2] <= d[i_miso + 2];
+              miso[3] <= d[i_miso + 3];
+              i_miso <= i_miso + 4; 
             end
           else if (~(mod_1 && posedge_sclk ) &&
              (( cnt == (i_miso + 34) && mod_2 && posedge_sclk )) &&
              (~(  mod_4 && posedge_sclk  )))
             begin
-            miso[0] <= d[i_miso];
-            miso[1] <= d[i_miso + 1]; 
-            i_miso <= i_miso + 2; 
+              miso[0] <= d[i_miso];
+              miso[1] <= d[i_miso + 1]; 
+              i_miso <= i_miso + 2; 
             end
-            //else
-            //miso <= miso; 
+          else
+            miso <= miso; 
+           
         end
       else
-        miso <= miso;  
+        begin
+          miso <= miso; 
+          i_miso <= 0; 
+        end
     end
 
 //data_ready and addres_ready 
@@ -332,5 +318,3 @@ always @(posedge clk or negedge reset_n)
     end
 
 endmodule
-
-
