@@ -1,4 +1,4 @@
-module pu(
+module pu( // processing unit
   input               clk,
   input               rst_n,
   // register map interface
