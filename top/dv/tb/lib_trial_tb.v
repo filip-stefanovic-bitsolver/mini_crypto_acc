@@ -1,7 +1,7 @@
-`include "$PROJDIR/dv/lib/clk_rst_generator.v"
-`include "$PROJDIR/dv/lib/dv_apb_master.v"
-`include "$PROJDIR/dv/lib/dv_mem_model.v"
-`include "$PROJDIR/dv/lib/dv_spi_master.v"
+`include "clk_rst_generator.v"
+`include "dv_apb_master.v"
+`include "dv_mem_model.v"
+`include "dv_spi_master.v"
 
 module lib_trial_tb(
   input pready,

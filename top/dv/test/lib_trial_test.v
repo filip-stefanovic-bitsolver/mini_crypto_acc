@@ -1,6 +1,6 @@
 `timescale 1ns/1ps //must be first so it's inherited in the included files
 
-`include "../tb/lib_trial_tb.v"
+`include "lib_trial_tb.v"
 
 module lib_trial_test();
 
@@ -36,12 +36,23 @@ module lib_trial_test();
     $finish;
   end
 
-  byte spi_wdata[] = {0, 1, 2, 3};
+  byte spi_wdata[4];
   byte spi_rdata[4];
 
-  dv_spi_master_i.drive(1, 5, spi_wdata, spi_rdata);
-  dv_spi_master_i.drive(2, 5, spi_wdata, spi_rdata);
-  dv_spi_master_i.drive(4, 5, spi_wdata, spi_rdata);
+  initial begin
+    spi_wdata[0] = 1;
+    spi_wdata[1] = 2;
+    spi_wdata[2] = 4;
+    spi_wdata[3] = 8;
+    repeat (25) @(posedge lib_trial_tb_i.pclk);
+    lib_trial_tb_i.dv_spi_master_i.drive(
+        1, 
+        5, 
+        spi_wdata, 
+        spi_rdata);
+    /*lib_trial_tb_i.dv_spi_master_i.drive(2, 5, spi_wdata, spi_rdata);
+    lib_trial_tb_i.dv_spi_master_i.drive(4, 5, spi_wdata, spi_rdata);*/
+  end
 
   initial begin
     pready = 0;
