@@ -1,3 +1,4 @@
+
 `timescale 1ns/1ps
 
 module spi_data_path_tb ();
@@ -58,7 +59,7 @@ task task_mod_1;
   end
 endtask  
 
-  task task_mod_2;
+task task_mod_2;
   begin
     spi_mode = 2'b10;
     mosi = 4'b0001;
@@ -76,7 +77,7 @@ endtask
   end
 endtask  
 
-  task task_mod_4;
+task task_mod_4;
   begin
     spi_mode = 2'b11;
     mosi = 4'b0001;
