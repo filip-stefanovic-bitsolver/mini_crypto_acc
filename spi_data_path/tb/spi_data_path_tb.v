@@ -1,4 +1,3 @@
-
 `timescale 1ns/1ps
 
 module spi_data_path_tb ();
@@ -17,6 +16,8 @@ reg [3:0]  miso;
 reg [19:0] addr;
 reg [3:0]  status;
 reg [15:0] wdata;
+reg cs_n_o;
+reg miso_start;
 
 
 
@@ -27,7 +28,7 @@ initial
     sclk = 1;
     reset_n = 0;
     cs_n = 1;
-    spi_mode = 2'b01;
+    spi_mode = 2'b10;
     mosi = 4'b0001;
     rdata = 16'hC69A;
     
@@ -37,10 +38,14 @@ initial
     #10ns;
     cs_n = 0;
 
+   // #1930ns
+    //mosi = 4'b0000;
+    //spi_mode = 2'b11;
+
     #1930ns
     mosi = 4'b0000;
 
-    #3920ns;
+    #5880ns;
     cs_n = 1;
 
     
@@ -69,10 +74,11 @@ always
   begin
     #20ns;
     if(~cs_n)
-      begin
-        sclk = ~sclk;
-        mosi[0] = ~mosi[0];
-      end
+    begin
+    sclk = ~sclk;
+    mosi[0] = ~mosi[0];
+    
+    end
     //#10us;
     //$finish;
   end
@@ -89,19 +95,8 @@ spi_data_path spi_data_path (clk,
                             miso,
                             addr,
                             status,
-                            wdata
+                            wdata,
+                            cs_n_o,
+                            miso_start
 );
 endmodule
-
-
-
-
-
-
-
-
-
-
-
-
-
