@@ -1,0 +1,3 @@
+iverilog -g2012 apb_downsizer*v -o a.out
+vvp a.out
+gtkwave waves.vcd
