@@ -35,18 +35,14 @@ module lib_trial_test();
     #100;
   end
 
-  byte spi_wdata[];
-  byte spi_rdata[];
-
   initial begin
-    spi_wdata = new [4];
-    spi_wdata = '{1,2,4,8};
     repeat (25) @(posedge lib_trial_tb_i.pclk);
-    lib_trial_tb_i.dv_spi_master_i.drive(1,5,spi_wdata);
+    lib_trial_tb_i.dv_spi_master_i.drive_dword(1,5,32'h17f3ad08);
     #10ns;
-    lib_trial_tb_i.dv_spi_master_i.drive(2,5,spi_wdata);
+    lib_trial_tb_i.dv_spi_master_i.drive_dword(2,5,32'h17f3ad08);
     #2ns;
-    lib_trial_tb_i.dv_spi_master_i.drive(4,5,spi_wdata);
+    lib_trial_tb_i.dv_spi_master_i.drive_dword(4,5,32'h17f3ad08,1);
+    lib_trial_tb_i.dv_spi_master_i.drive_word(4,10,16'hdead);
     #100;
     $finish;
   end
