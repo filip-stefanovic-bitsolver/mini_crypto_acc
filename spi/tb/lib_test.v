@@ -2,24 +2,25 @@
 
 `include "lib_tb.v"
 
-module lib_trial_test();
-
-  byte spi_wdata[];
-  byte spi_rdata[];
-
+module lib_test();
+ lib_tb lib_tb_i();
   initial begin
-    spi_wdata = new [6];
-    spi_wdata = '{1,2,4,8,0,0};
     repeat (25) @(posedge lib_tb_i.clk);
-    lib_tb_i.t_spi_master_i.drive(1,5,spi_wdata);
+    lib_tb_i.t_spi_master_i.drive_dword(1,5,32'h17f3ad08);
     #10ns;
-    lib_tb_i.t_spi_master_i.drive(2,5,spi_wdata);
+    lib_tb_i.t_spi_master_i.drive_dword(2,5,32'h17f3ad08);
     #2ns;
-    lib_tb_i.t_spi_master_i.drive(4,5,spi_wdata);
+    lib_tb_i.t_spi_master_i.drive_dword(4,5,32'h17f3ad08,1);
+    lib_tb_i.t_spi_master_i.drive_word(4,10,16'hdead);
     #100;
     $finish;
   end
   
   initial $dumpvars;
+  //initial 
+  // begin
+  //   $dumpfile("waves.vcd");
+  //   $dumpvars;
+  // end
 
 endmodule
