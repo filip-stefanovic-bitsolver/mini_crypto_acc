@@ -10,7 +10,7 @@ module control_fsm(
   input [15:0] prdata_s,
   input pslverr_s_rm,
   input pslverr_s_icn,
-  input cs_n,
+  input cs_n_o,
   input miso_start,
 
   output [1:0] psel_s,
@@ -146,7 +146,7 @@ module control_fsm(
     else begin
       if (state == IDLE)
         cs_flag <= 1'b0;
-      else if (cs_n)
+      else if (cs_n_o)
         cs_flag <= 1'b1;
       else
         cs_flag <= cs_flag;
