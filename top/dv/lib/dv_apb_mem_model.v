@@ -1,6 +1,6 @@
 
-module dv_apb_mem_model ( i
-                  nput clk,
+module dv_apb_mem_model ( 
+                  input clk,
                   input reset_n,
                   input         penable,
                   input [1:0]   psel,

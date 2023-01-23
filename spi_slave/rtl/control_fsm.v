@@ -13,23 +13,15 @@ module control_fsm(
   input cs_n_o,
   input miso_start,
 
-  output [1:0] psel_s,
-  output penable_s,
-  output pwrite_s, 
-  output [1:0] pstrb_s,
-  output [19:0] paddr_s,
-  output [15:0] pwdata_s,
-  output [15:0] rdata,
-  output err
+  output reg [1:0] psel_s,
+  output reg penable_s,
+  output reg pwrite_s, 
+  output reg [1:0] pstrb_s,
+  output reg [19:0] paddr_s,
+  output reg [15:0] pwdata_s,
+  output reg [15:0] rdata,
+  output reg err
 );
-  reg [1:0] psel_s;
-  reg penable_s;
-  reg pwrite_s;
-  reg [1:0] pstrb_s;
-  reg [19:0] paddr_s;
-  reg [15:0] pwdata_s;
-  reg [15:0] rdata;
-  reg err;
 
 
   reg [19:0] address;

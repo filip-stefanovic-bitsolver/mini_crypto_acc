@@ -1,17 +1,19 @@
 `timescale 1ns/1ps //must be first so it's inherited in the included files
 
-`include "lib_tb.v"
+`include "spi_tb.v"
 
 module lib_test();
- lib_tb lib_tb_i();
+
+ spi_tb spi_tb();
+
   initial begin
-    repeat (25) @(posedge lib_tb_i.clk);
-    lib_tb_i.t_spi_master_i.drive_dword(1,5,32'h17f3ad08);
+    repeat (25) @(posedge spi_tb.clk);
+    spi_tb.t_spi_master_i.drive_dword(1,5,32'h17f3ad08);
     #10ns;
-    lib_tb_i.t_spi_master_i.drive_dword(2,5,32'h17f3ad08);
+    spi_tb.t_spi_master_i.drive_dword(2,5,32'h17f3ad08);
     #2ns;
-    lib_tb_i.t_spi_master_i.drive_dword(4,5,32'h17f3ad08,1);
-    lib_tb_i.t_spi_master_i.drive_word(4,10,16'hdead);
+    spi_tb.t_spi_master_i.drive_dword(4,5,32'h17f3ad08,1);
+    spi_tb.t_spi_master_i.drive_word(4,10,16'hdead);
     #100;
     $finish;
   end

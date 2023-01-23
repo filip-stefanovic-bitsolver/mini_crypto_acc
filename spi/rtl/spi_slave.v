@@ -50,9 +50,6 @@ wire [1:0] psel_s;
 wire [1:0] pstrb_s;
 wire [19:0] paddr_s;
 wire [15:0] pwdata_s;
-wire [1:0] pstrb;
-
-
 
 spi_data_path spi_data_path (  .clk(clk),
                                .reset_n(reset_n),

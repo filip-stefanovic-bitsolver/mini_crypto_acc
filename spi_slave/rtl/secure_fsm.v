@@ -14,28 +14,17 @@ module secure_fsm(
   input pready_icn,
   input pslverr_icn,
 
-  output [1:0] psel,
-  output penable,
-  output pwrite,
-  output [1:0] pstrb,
-  output [19:0] paddr,
-  output [15:0] pwdata,
-  output [15:0] prdata_s,
-  output pready_s,
-  output pslverr_s_rm,
-  output pslverr_s_icn
+  output reg [1:0] psel,
+  output reg penable,
+  output reg pwrite,
+  output reg [1:0] pstrb,
+  output reg [19:0] paddr,
+  output reg [15:0] pwdata,
+  output reg [15:0] prdata_s,
+  output reg pready_s,
+  output reg pslverr_s_rm,
+  output reg pslverr_s_icn
 );
-
-  reg [1:0] psel;
-  reg penable;
-  reg pwrite;
-  reg [1:0] pstrb;
-  reg [19:0] paddr;
-  reg [15:0] pwdata;
-  reg [15:0] prdata_s;
-  reg pready_s;
-  reg pslverr_s_rm;
-  reg pslverr_s_icn;
 
   reg state;
 
