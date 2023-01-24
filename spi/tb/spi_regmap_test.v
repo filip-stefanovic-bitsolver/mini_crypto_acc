@@ -10,7 +10,7 @@ module spi_regmap_test();
     repeat (25) @(posedge spi_tb.clk);
     spi_tb.dv_spi_master_i.drive_dword(1,40,48'hccdf1745ad08);
     #10ns;
-    spi_tb.dv_spi_master_i.drive_dword(2,40,48'ha96b1744a7de);
+    spi_tb.dv_spi_master_i.drive_dword(2,40,48'ha96b1704a7de);
     #2ns;
     spi_tb.dv_spi_master_i.drive_dword(2,40,48'ha97817f7ad08,1);
     spi_tb.dv_spi_master_i.drive_word(2,40,16'hdead);
