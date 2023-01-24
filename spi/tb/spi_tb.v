@@ -13,7 +13,19 @@ reg pslverr_rm;
 reg [15:0] prdata_icn;
 reg pready_icn;
 reg pslverr_icn;
-
+wire [1:0] psel;
+wire [19:0] paddr;
+wire [15:0] pwdata;
+//wire [15:0] rdata;
+//wire [3:0] status;
+wire [15:0] prdata_s;
+//wire [1:0] psel_s;
+wire [1:0] pstrb;
+//wire [19:0] paddr_s;
+//wire [15:0] pwdata_s;
+wire [3:0] mosi;
+wire [3:0] miso;
+wire [1:0] spi_mode;
 
 
 clk_rst_generator clk_rst_generator_i (
@@ -22,8 +34,8 @@ clk_rst_generator clk_rst_generator_i (
 );
 
 dv_apb_mem_model apb_rm_i(
-  .pclk(clk),
-  .prst_n(reset_n),
+  .clk(clk),
+  .reset_n(reset_n),
   .psel(psel),      
   .penable(penable), 
   .pwrite(pwrite),
@@ -36,8 +48,8 @@ dv_apb_mem_model apb_rm_i(
 );  
 
 dv_apb_mem_model apb_icn_i(
-  .pclk(clk),
-  .prst_n(reset_n),
+  .clk(clk),
+  .reset_n(reset_n),
   .psel(psel),      
   .penable(penable), 
   .pwrite(pwrite),
@@ -53,7 +65,8 @@ dv_spi_master dv_spi_master_i (
   .mosi(mosi),
   .miso(miso),
   .sclk(sclk),
-  .cs_n(cs_n)
+  .cs_n(cs_n),
+  .spi_mode(spi_mode)
 );
 
 
@@ -74,10 +87,10 @@ spi_slave spi_slave_i (
   .miso(miso),
   .psel(psel),
   .penable(penable),
-  .write(write),
-  .strb(strb),
-  .addr(addr),
-  .wdata(wdata),
+  .pwrite(pwrite),
+  .pstrb(pstrb),
+  .paddr(paddr),
+  .pwdata(pwdata),
   .err(err)
 );
 

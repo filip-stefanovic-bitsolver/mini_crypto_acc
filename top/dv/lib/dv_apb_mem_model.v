@@ -19,7 +19,7 @@ module dv_apb_mem_model (
     pready = 0;
     pslverr = 0;
   end
-   always @(posedge lib_tb_i.clk)
+   always @(posedge clk)
   begin
     pready = $random;
     pslverr = $random;

@@ -1,16 +1,16 @@
 module clk_rst_generator #(
-  parameter CLK_PERIOD_NS = 2, 
-  parameter RST_DURATION_NS = 10
+  parameter CLK_PERIOD_NS = 10, 
+  parameter RST_DURATION_NS = 50
 ) (
   output reg clk,
-  output reg rst_n
+  output reg reset_n
 );
 
   initial begin
     clk <= 1'b0;
-    rst_n <= 1'b0;
+    reset_n <= 1'b0;
     #(RST_DURATION_NS/1ns);   
-    rst_n <= 1'b1;
+    reset_n <= 1'b1;
   end          
 
   always begin 

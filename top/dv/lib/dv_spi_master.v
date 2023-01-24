@@ -2,7 +2,9 @@ module dv_spi_master(
   output reg [3:0] mosi,
   input      [3:0] miso,
   output reg       sclk,
-  output reg       cs_n
+  output reg       cs_n,
+  output reg [1:0] spi_mode
+
 );
 
 
@@ -10,33 +12,43 @@ module dv_spi_master(
     cs_n = 1'b1;
     mosi = 'z;
     sclk = 1'b0;
+    spi_mode = 2'b00;
   end
 
   task drive_word(
     input int          num_of_lanes,
     input int          sclk_period_ns,
-    input logic [15:0] din,
+    input logic        [15:0] din,
     input logic        burst = 0
   );
   begin
+       if (num_of_lanes == 1)
+          spi_mode = 2'b01;
+       else if (num_of_lanes == 2)
+          spi_mode = 2'b10;
+       else if (num_of_lanes == 4)
+          spi_mode = 2'b11;    
+       else   
+          spi_mode = 2'b00; 
        cs_n = 0;
 
-    for (int i=0;i<num_of_lanes;i++)
-      mosi[i] = din[i];
+    // for (int i=0;i<num_of_lanes;i++)
+    //   mosi[i] = din[i];
 
     $display ("driving %4b on MOSI", mosi);
     
     #(sclk_period_ns/2ns); //TODO add configurable delay here?
 
-    for (int i=num_of_lanes;i<16;i+=num_of_lanes)
+    for (int i=0;i<16;i+=num_of_lanes)
     begin
       sclk = 1;
-      #(sclk_period_ns/2ns);
-      sclk = 1'b0; 
-      //sample MISO at negedge
       for (int j=0;j<num_of_lanes;j++)
         mosi[j] = din[i+j];
       $display ("driving %4b on MOSI", mosi);
+      #(sclk_period_ns/2ns);
+      sclk = 1'b0; 
+      //sample MISO at negedge
+      
       #(sclk_period_ns/2ns);
     end
     sclk = 1;
@@ -55,28 +67,37 @@ module dv_spi_master(
   task drive_dword(
     input int          num_of_lanes,
     input int          sclk_period_ns,
-    input logic [31:0] din,
+    input logic [47:0] din,
     input logic        burst = 0
   );
   begin
+     if (num_of_lanes == 1)
+          spi_mode = 2'b01;
+       else if (num_of_lanes == 2)
+          spi_mode = 2'b10;
+       else if (num_of_lanes == 4)
+          spi_mode = 2'b11;    
+       else   
+          spi_mode = 2'b00;
        cs_n = 0;
 
-    for (int i=0;i<num_of_lanes;i++)
-      mosi[i] = din[i];
+    // for (int i=0;i<num_of_lanes;i++)
+    //   mosi[i] = din[i];
 
     $display ("driving %4b on MOSI", mosi);
     
     #(sclk_period_ns/2ns); //TODO add configurable delay here?
 
-    for (int i=num_of_lanes;i<32;i+=num_of_lanes)
+    for (int i=0;i<48;i+=num_of_lanes)
     begin
       sclk = 1;
+           for (int j=0;j<num_of_lanes;j++)
+        mosi[j] = din[i+j];
+      $display ("driving %4b on MOSI", mosi);
       #(sclk_period_ns/2ns);
       sclk = 1'b0; 
       //sample MISO at negedge
-      for (int j=0;j<num_of_lanes;j++)
-        mosi[j] = din[i+j];
-      $display ("driving %4b on MOSI", mosi);
+ 
       #(sclk_period_ns/2ns);
     end
     sclk = 1;

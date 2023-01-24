@@ -53,7 +53,7 @@ module secure_fsm(
         LOCKED: begin
           if (psel_s == 2'b01) begin
             state <= LOCKED;
-            if (!pready_rm) begin             
+            //if (!pready_rm) begin             
               psel <= psel_s;
               penable <= penable_s;
               pwrite <= pwrite_s;
@@ -63,15 +63,17 @@ module secure_fsm(
               prdata_s <= prdata_s;
               pslverr_s_rm <= pslverr_rm;
               pslverr_s_icn <= 1'b0;
-              pready_s <= 1'b0;
-            end
-            else begin
-              psel <= 2'b00;
-              penable <= 1'b0; 
+              // pready_s <= 1'b0;
+            //end
+            //else begin
+            // if(pready_rm) begin
+            //   psel <= 2'b00;
+            //   penable <= 1'b0; 
               pready_s <= pready_rm;
               prdata_s <= prdata_rm;
-              pslverr_s_rm <= pslverr_rm;            
-            end
+              pslverr_s_rm <= pslverr_rm; 
+            // end           
+            //end
           end
           else if (psel_s == 2'b10) begin
             if ((paddr_s == PAS_ADR) & (pwdata_s == PAS_DATA)

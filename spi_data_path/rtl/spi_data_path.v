@@ -33,6 +33,8 @@ reg integer i_addr;
 reg integer i_status;
 reg integer i_wdata;
 reg integer i_miso;
+reg [3:0]  mosi_syn_1;
+reg [3:0]  mosi_syn_2;
 
 always @(*) 
   begin
@@ -53,6 +55,8 @@ always @(posedge clk or negedge reset_n)
       sclk_syn_3 <= 1'b0;
       cs_n_syn_1 <= 1'b0;
       cs_n_syn_2 <= 1'b0;
+      mosi_syn_1 <= 4'b0000;
+      mosi_syn_2 <= 4'b0000;
     end
   else
     begin
@@ -61,6 +65,8 @@ always @(posedge clk or negedge reset_n)
       sclk_syn_3 <= sclk_syn_2;
       cs_n_syn_1 <= cs_n;
       cs_n_syn_2 <= cs_n_syn_1;
+      mosi_syn_1 <= mosi;
+      mosi_syn_2 <= mosi_syn_1;
       posedge_sclk <= sclk_syn_2 && (~sclk_syn_3);
       negedge_sclk <= ~sclk_syn_2 && (sclk_syn_3);
     end
@@ -74,7 +80,7 @@ always @(posedge clk or negedge reset_n)
       if (cs_n_syn_2 == 1'b1)
         cnt <= 0;
       else if ((cnt > 48) && (status[1]== 1'b1))
-        cnt <= 33;
+        cnt <= 32;
       else if ((cnt > 48) && (status[1]== 1'b0))
         cnt <= 0;
       else  
@@ -110,25 +116,25 @@ always @(posedge clk or negedge reset_n)
              (~(  mod_2 && negedge_sclk  )) &&
              (~(  mod_4 && negedge_sclk  )))
             begin
-              addr[i_addr] <= mosi[0]; 
+              addr[i_addr] <= mosi_syn_2[0]; 
               i_addr <= i_addr + 1; 
              end
           else if (~(mod_1 && negedge_sclk ) &&
              (~(  mod_2 && negedge_sclk  )) &&
              ((  mod_4 && negedge_sclk  )))
             begin
-              addr[i_addr] <= mosi[0];
-              addr[i_addr + 1] <= mosi[1]; 
-              addr[i_addr + 2] <= mosi[2];
-              addr[i_addr + 3] <= mosi[3];
+              addr[i_addr] <= mosi_syn_2[0];
+              addr[i_addr + 1] <= mosi_syn_2[1]; 
+              addr[i_addr + 2] <= mosi_syn_2[2];
+              addr[i_addr + 3] <= mosi_syn_2[3];
               i_addr <= i_addr + 4; 
             end
           else if (~(mod_1 && negedge_sclk ) &&
              (( mod_2 && negedge_sclk )) &&
              (~(  mod_4 && negedge_sclk  )))
             begin
-              addr[i_addr] <= mosi[0];
-              addr[i_addr + 1] <= mosi[1]; 
+              addr[i_addr] <= mosi_syn_2[0];
+              addr[i_addr + 1] <= mosi_syn_2[1]; 
               i_addr <= i_addr + 2; 
             end
           else
@@ -156,25 +162,25 @@ always @(posedge clk or negedge reset_n)
              (~(  mod_2 && negedge_sclk  )) &&
              (~(  mod_4 && negedge_sclk  )))
             begin
-              status[i_status] <= mosi[0]; 
+              status[i_status] <= mosi_syn_2[0]; 
               i_status <= i_status + 1; 
              end
           else if (~(mod_1 && negedge_sclk ) &&
              (~(  mod_2 && negedge_sclk  )) &&
              ((  mod_4 && negedge_sclk  )))
             begin
-              status[i_status] <= mosi[0];
-              status[i_status + 1] <= mosi[1]; 
-              status[i_status + 2] <= mosi[2];
-              status[i_status + 3] <= mosi[3];
+              status[i_status] <= mosi_syn_2[0];
+              status[i_status + 1] <= mosi_syn_2[1]; 
+              status[i_status + 2] <= mosi_syn_2[2];
+              status[i_status + 3] <= mosi_syn_2[3];
               i_status <= i_status + 4; 
             end
           else if (~(mod_1 && negedge_sclk ) &&
              (( mod_2 && negedge_sclk )) &&
              (~(  mod_4 && negedge_sclk  )))
             begin
-              status[i_status] <= mosi[0];
-              addr[i_addr + 1] <= mosi[1]; 
+              status[i_status] <= mosi_syn_2[0];
+              status[i_status + 1] <= mosi_syn_2[1]; 
               i_status <= i_status + 2; 
             end
           else
@@ -202,25 +208,25 @@ always @(posedge clk or negedge reset_n)
              (~(  mod_2 && negedge_sclk && status[2]  )) &&
              (~(  mod_4 && negedge_sclk && status[2]  )))
             begin
-              wdata[i_wdata] <= mosi[0]; 
+              wdata[i_wdata] <= mosi_syn_2[0]; 
               i_wdata <= i_wdata + 1; 
             end
           else if (~(mod_1 && negedge_sclk && status[2] ) &&
              (~(  mod_2 && negedge_sclk && status[2]  )) &&
              ((  mod_4 && negedge_sclk && status[2]  )))
             begin
-              wdata[i_wdata] <= mosi[0];
-              wdata[i_wdata + 1] <= mosi[1]; 
-              wdata[i_wdata + 2] <= mosi[2];
-              wdata[i_wdata + 3] <= mosi[3];
+              wdata[i_wdata] <= mosi_syn_2[0];
+              wdata[i_wdata + 1] <= mosi_syn_2[1]; 
+              wdata[i_wdata + 2] <= mosi_syn_2[2];
+              wdata[i_wdata + 3] <= mosi_syn_2[3];
               i_wdata <= i_wdata + 4; 
             end
           else if (~(mod_1 && negedge_sclk && status[2] ) &&
              (( mod_2 && negedge_sclk && status[2] )) &&
              (~(  mod_4 && negedge_sclk && status[2]  )))
             begin
-              wdata[i_wdata] <= mosi[0];
-              wdata[i_wdata + 1] <= mosi[1]; 
+              wdata[i_wdata] <= mosi_syn_2[0];
+              wdata[i_wdata + 1] <= mosi_syn_2[1]; 
               i_wdata <= i_wdata + 2; 
             end
           else
@@ -235,15 +241,10 @@ always @(posedge clk or negedge reset_n)
 
 //description of rdata register
 always @(posedge clk or negedge reset_n)
-  if(~reset_n)
+  if (~reset_n)
       d <= 16'h0000;
-  else
-    begin
-      if (((cnt == 32)) && negedge_sclk && ~status[2])
-        d <= rdata;
-      else
-        d <= d;     
-    end
+  else if (((cnt == 32)) && negedge_sclk)
+        d <= rdata; 
 
 //description of miso register
 always @(posedge clk or negedge reset_n)
