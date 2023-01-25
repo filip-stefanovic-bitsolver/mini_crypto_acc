@@ -13,6 +13,7 @@ module dv_spi_master(
     mosi = 'z;
     sclk = 1'b0;
     spi_mode = 2'b00;
+    #0.01ns;
   end
 
   task drive_word(

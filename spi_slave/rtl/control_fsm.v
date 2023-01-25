@@ -2,6 +2,7 @@ module control_fsm(
   input clk,
   input reset_n,
   input address_ready,
+  input status_ready,
   input data_ready,
   input [19:0] addr,
   input [3:0] status,
@@ -51,7 +52,7 @@ module control_fsm(
   always @(*) begin
     case (state)
       IDLE:
-        if (address_ready) begin
+        if (status_ready) begin
           if (status[2])
             next = WAIT_WR;
           else
@@ -144,7 +145,7 @@ module control_fsm(
         cs_flag <= cs_flag;
       if ((state == IDLE) && (address_ready))
         address <= addr;
-      else if (pready_s)
+      else if (((state == ACCESS_RD) || (state == ACCESS_WR)) && pready_s)
         address <= address + 20'h00002;
     end
 
@@ -200,14 +201,13 @@ module control_fsm(
         WAIT_RD: begin
           if (pready_s)
             rdata <= prdata_s;
-          else
-            rdata <= rdata;
           psel_s <= 2'b00;
           penable_s <= 1'b0;
         end
         IDLE: begin
           psel_s <= 2'b00;
           penable_s <= 1'b0;
+          rdata <= 16'h0000;
         end
         WAIT_WR: begin
           psel_s <= 2'b00;
