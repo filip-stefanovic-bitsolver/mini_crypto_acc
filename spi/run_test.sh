@@ -8,6 +8,7 @@ iverilog -g2012 \
     -I $PROJDIR/spi_data_path/rtl \
     -I $PROJDIR/spi/rtl \
     -I $PROJDIR/spi/tb \
+    -D DUMP_MEMS \
     ../tb/spi_regmap_test.v
     
     vvp a.out

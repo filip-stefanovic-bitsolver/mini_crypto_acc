@@ -13,7 +13,6 @@ module dv_spi_master(
     mosi = 'z;
     sclk = 1'b0;
     spi_mode = 2'b00;
-    #0.01ns;
   end
 
   task drive_word(
@@ -21,6 +20,7 @@ module dv_spi_master(
     input int          sclk_period_ns,
     input logic        [15:0] din,
     input logic        burst = 0
+    //output logic       [15:0] result
   );
   begin
        if (num_of_lanes == 1)
@@ -49,7 +49,8 @@ module dv_spi_master(
       #(sclk_period_ns/2ns);
       sclk = 1'b0; 
       //sample MISO at negedge
-      
+      //for (int j=0;j<num_of_lanes;j++)
+       // result[i+j] = miso[j];
       #(sclk_period_ns/2ns);
     end
     sclk = 1;
@@ -70,6 +71,7 @@ module dv_spi_master(
     input int          sclk_period_ns,
     input logic [47:0] din,
     input logic        burst = 0
+    //output reg       [15:0] result
   );
   begin
      if (num_of_lanes == 1)
@@ -98,6 +100,8 @@ module dv_spi_master(
       #(sclk_period_ns/2ns);
       sclk = 1'b0; 
       //sample MISO at negedge
+      //for (int j=0;j<num_of_lanes;j++)
+        //result[i+j] = miso[j];
  
       #(sclk_period_ns/2ns);
     end

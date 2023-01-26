@@ -1,5 +1,6 @@
 `include "clk_rst_generator.v"
 `include "dv_apb_mem_model.v"
+`include "dv_mem_model.v"
 `include "dv_spi_master.v"
 `include "spi_slave.v"
 
@@ -19,6 +20,7 @@ wire [15:0] pwdata;
 //wire [15:0] rdata;
 //wire [3:0] status;
 wire [15:0] prdata_s;
+wire [15:0] prdata;
 //wire [1:0] psel_s;
 wire [1:0] pstrb;
 //wire [19:0] paddr_s;
@@ -68,6 +70,15 @@ dv_spi_master dv_spi_master_i (
   .cs_n(cs_n),
   .spi_mode(spi_mode)
 );
+
+
+//dv_mem_model dv_mem_model_i  (
+//  .clk(clk),   //clock
+//  .we(pwrite),    //write-enable, active high
+//  .addr(paddr),  //address bus
+//  .din(pwdata),   //input data bus
+//  .dout(prdata)   //output data bus
+//);
 
 
 spi_slave spi_slave_i ( 

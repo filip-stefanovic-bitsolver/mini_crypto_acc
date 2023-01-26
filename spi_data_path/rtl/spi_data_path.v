@@ -257,9 +257,9 @@ always @(posedge clk or negedge reset_n)
     end
   else
     begin
-      if ((cnt <= 48) && (cnt > 32))
+      if ((cnt < 48) && (cnt >= 32))
         begin
-          if ((cnt == (i_miso + 33) && mod_1 && posedge_sclk ) &&
+          if ((cnt == (i_miso + 32) && mod_1 && posedge_sclk ) &&
              (~(  mod_2 && posedge_sclk  )) &&
              (~(  mod_4 && posedge_sclk  )))
             begin
@@ -268,7 +268,7 @@ always @(posedge clk or negedge reset_n)
             end
           else if (~(mod_1 && posedge_sclk ) &&
              (~(  mod_2 && posedge_sclk  )) &&
-             (( cnt == (i_miso + 36) && mod_4 && posedge_sclk  )))
+             (( cnt == (i_miso + 32) && mod_4 && posedge_sclk  )))
             begin
               miso[0] <= d[i_miso];
               miso[1] <= d[i_miso + 1]; 
@@ -277,7 +277,7 @@ always @(posedge clk or negedge reset_n)
               i_miso <= i_miso + 4; 
             end
           else if (~(mod_1 && posedge_sclk ) &&
-             (( cnt == (i_miso + 34) && mod_2 && posedge_sclk )) &&
+             (( cnt == (i_miso + 32) && mod_2 && posedge_sclk )) &&
              (~(  mod_4 && posedge_sclk  )))
             begin
               miso[0] <= d[i_miso];
@@ -307,7 +307,9 @@ always @(posedge clk or negedge reset_n)
     begin
       data_ready    <= (cnt == 48 && posedge_sclk);
       address_ready <= (cnt == 20 && posedge_sclk);
-      miso_start    <= (cnt == 32 && posedge_sclk);
+      miso_start    <= ((cnt == 31 && posedge_sclk && mod_1)||
+                        (cnt == 30 && posedge_sclk && mod_2)||
+                        (cnt == 28 && posedge_sclk && mod_4));
       status_ready <= (cnt == 24 && posedge_sclk);
     end
 
