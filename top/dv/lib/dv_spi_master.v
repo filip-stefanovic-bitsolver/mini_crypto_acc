@@ -20,7 +20,7 @@ module dv_spi_master(
     input int          num_of_lanes,
     input int          sclk_period_ns,
     input logic        [15:0] din,
-    input logic        burst = 0
+    input logic        burst 
   );
   begin
        if (num_of_lanes == 1)
@@ -69,7 +69,7 @@ module dv_spi_master(
     input int          num_of_lanes,
     input int          sclk_period_ns,
     input logic [47:0] din,
-    input logic        burst = 0
+    input logic        burst 
   );
   begin
      if (num_of_lanes == 1)
