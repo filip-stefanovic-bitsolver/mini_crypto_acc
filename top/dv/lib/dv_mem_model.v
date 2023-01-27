@@ -12,8 +12,9 @@ module dv_mem_model #(
   output [DW-1:0] dout   //output data bus
 );
 
-  reg [DW-1:0] mem[2**AW-1:0];
+  reg [DW-1:0][2**AW-1:0]mem;
   reg [DW-1:0] dout_q;
+  
  
 `ifdef DUMP_MEMS
 `endif 

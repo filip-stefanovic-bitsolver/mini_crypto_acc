@@ -89,9 +89,11 @@ module control_fsm(
       SETUP_RD:
         next = ACCESS_RD;
       ACCESS_RD:
-        if ((pready_s) && (!pslverr_s_icn && !pslverr_s_rm) && (!miso_start))
+        //if ((pready_s) && (!pslverr_s_icn && !pslverr_s_rm) && (!miso_start))
+        if ((pready_s) && (!pslverr_s_icn && !pslverr_s_rm))
           next = WAIT_RD;
-        else if ((miso_start) || ((pslverr_s_icn || pslverr_s_rm) && pready_s))
+        //else if ((miso_start) || ((pslverr_s_icn || pslverr_s_rm) && pready_s))
+        else if (miso_start && !pready_s)
           next = ERROR;
         else if (cs_flag)
           next = IDLE;

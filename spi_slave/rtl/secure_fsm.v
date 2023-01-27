@@ -62,6 +62,7 @@ module secure_fsm(
             paddr <= paddr_s;
             pwdata <= pwdata_s;
             pslverr_s_icn <= 1'b0;
+
             if (enable) begin
               pready_s <= pready_rm;
               pslverr_s_rm <= pslverr_rm;
@@ -77,12 +78,14 @@ module secure_fsm(
                 state <= LOCKED;
               psel <= 2'b00;
               penable <= 1'b0;
+              enable <= 1'b0;
               pready_s <= 1'b1;       
             end
             else begin
               state <= LOCKED;
               psel <= 2'b00;
               penable <= 1'b0;
+              enable <= 1'b0;
               pready_s <= 1'b1;
               pslverr_s_icn <= 1'b1;
             end
@@ -91,6 +94,7 @@ module secure_fsm(
             state <= LOCKED;
             psel <= 2'b00;
             penable <= 1'b0;
+            enable <= 1'b0;
             pwrite <= 1'b0;
             pstrb <= 2'b00;
             paddr <= 20'h00000;
@@ -113,6 +117,7 @@ module secure_fsm(
             paddr <= paddr_s;
             pwdata <= pwdata_s;
             pslverr_s_icn <= 1'b0;
+            
             if (enable) begin
               pready_s <= pready_rm;
               pslverr_s_rm <= pslverr_rm;
@@ -140,11 +145,11 @@ module secure_fsm(
               pstrb <= pstrb_s;
               paddr <= paddr_s;
               pwdata <= pwdata_s;
-              pslverr_s_rm <= 1'b0;               
+              pslverr_s_rm <= 1'b0;
+              prdata_s <= prdata_icn;               
               if (enable) begin
                 pready_s <= pready_icn;
-                pslverr_s_icn <= pslverr_icn;
-                prdata_s <= prdata_icn;
+                pslverr_s_icn <= pslverr_icn;               
               end
             end
           end

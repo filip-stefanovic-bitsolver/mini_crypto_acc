@@ -21,17 +21,18 @@ generate
 
   dv_mem_model #(
     .DW (16), 
-    .AW (20)  
+    .AW (5)  
   ) dv_mem_model_i (
     .clk(clk),   //clock
-    .we(psel && penable && pwrite),    //write-enable, active high
-    .addr(paddr[19:0]),  //address bus
+    .we(penable && pwrite),    //write-enable, active high
+    .addr(paddr[4:0]),  //address bus
     .din(pwdata),   //input data bus
     .dout(prdata)   //output data bus
   );
 
   assign pready = 1'b1;
   assign pslverr = 1'b0;
+
 
   end : gen_dv_mem_model
   else 
