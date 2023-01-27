@@ -12,4 +12,4 @@ iverilog -g2012 \
     ../tb/spi_regmap_test.v
     
     vvp a.out
-cd ../
+cd ../  
