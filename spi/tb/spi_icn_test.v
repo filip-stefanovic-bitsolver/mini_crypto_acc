@@ -1,4 +1,3 @@
-
 `timescale 1ns/1ps //must be first so it's inherited in the included files
 
 `include "spi_tb.v"
