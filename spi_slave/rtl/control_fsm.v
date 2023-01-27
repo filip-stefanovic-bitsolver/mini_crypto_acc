@@ -82,7 +82,9 @@ module control_fsm(
               next = IDLE;
           end
         end
-        else
+        else if (address_ready)
+          next = IDLE;
+        else 
           next = ACCESS_WR;
       SETUP_RD:
         next = ACCESS_RD;
@@ -115,9 +117,9 @@ module control_fsm(
           if (data_ready) begin
             if (status[1]) begin
               if (status[2])
-                next = SETUP_RD;
-              else
                 next = SETUP_WR;
+              else
+                next = SETUP_RD;
             end
             else 
               next = IDLE;
@@ -143,7 +145,8 @@ module control_fsm(
         cs_flag <= 1'b1;
       else
         cs_flag <= cs_flag;
-      if ((state == IDLE) && (address_ready))
+      //if ((state == IDLE) && (address_ready))
+      if (address_ready)
         address <= addr;
       else if (((state == ACCESS_RD) || (state == ACCESS_WR)) && pready_s)
         address <= address + 20'h00002;

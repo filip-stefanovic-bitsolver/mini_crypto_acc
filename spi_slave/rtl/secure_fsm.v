@@ -27,6 +27,7 @@ module secure_fsm(
 );
 
   reg state;
+  reg enable;
 
   localparam LOCKED = 1'b0;
   localparam UNLOCKED = 1'b1;
@@ -52,28 +53,20 @@ module secure_fsm(
       case (state)
         LOCKED: begin
           if (psel_s == 2'b01) begin
-            state <= LOCKED;
-            //if (!pready_rm) begin             
-              psel <= psel_s;
-              penable <= penable_s;
-              pwrite <= pwrite_s;
-              pstrb <= pstrb_s;
-              paddr <= paddr_s;
-              pwdata <= pwdata_s;
-              prdata_s <= prdata_s;
-              pslverr_s_rm <= pslverr_rm;
-              pslverr_s_icn <= 1'b0;
-              // pready_s <= 1'b0;
-            //end
-            //else begin
-            // if(pready_rm) begin
-            //   psel <= 2'b00;
-            //   penable <= 1'b0; 
+            state <= LOCKED;            
+            psel <= psel_s;
+            enable <= penable_s;
+            penable <= penable_s;
+            pwrite <= pwrite_s;
+            pstrb <= pstrb_s;
+            paddr <= paddr_s;
+            pwdata <= pwdata_s;
+            pslverr_s_icn <= 1'b0;
+            if (enable) begin
               pready_s <= pready_rm;
+              pslverr_s_rm <= pslverr_rm;
               prdata_s <= prdata_rm;
-              pslverr_s_rm <= pslverr_rm; 
-            // end           
-            //end
+            end
           end
           else if (psel_s == 2'b10) begin
             if ((paddr_s == PAS_ADR) & (pwdata_s == PAS_DATA)
@@ -111,25 +104,19 @@ module secure_fsm(
        
         UNLOCKED: begin
           if (psel_s == 2'b01) begin
-            state <= UNLOCKED;
-            if (!pready_rm) begin             
-              psel <= psel_s;
-              penable <= penable_s;
-              pwrite <= pwrite_s;
-              pstrb <= pstrb_s;
-              paddr <= paddr_s;
-              pwdata <= pwdata_s;
-              prdata_s <= prdata_s;
+            state <= UNLOCKED;            
+            psel <= psel_s;
+            enable <= penable_s;
+            penable <= penable_s;
+            pwrite <= pwrite_s;
+            pstrb <= pstrb_s;
+            paddr <= paddr_s;
+            pwdata <= pwdata_s;
+            pslverr_s_icn <= 1'b0;
+            if (enable) begin
+              pready_s <= pready_rm;
               pslverr_s_rm <= pslverr_rm;
-              pslverr_s_icn <= 1'b0;
-              pready_s <= 1'b0;
-            end
-            else begin
-              psel <= 2'b00;
-              penable <= 1'b0;  
-              pready_s <= pready_rm;  
-              prdata_s <= prdata_rm; 
-              pslverr_s_rm <= pslverr_rm;         
+              prdata_s <= prdata_rm;
             end
           end
           else if (psel_s == 2'b10) begin
@@ -141,27 +128,23 @@ module secure_fsm(
                 state <= UNLOCKED;
               psel <= 2'b00;
               penable <= 1'b0; 
+              enable <= 1'b0;
               pready_s <= 1'b1;
             end
             else begin
-              if (!pready_icn) begin
-                state <= UNLOCKED;
-                psel <= psel_s;
-                penable <= penable_s;
-                pwrite <= pwrite_s;
-                pstrb <= pstrb_s;
-                paddr <= paddr_s;
-                pwdata <= pwdata_s;
+              state <= UNLOCKED;
+              psel <= psel_s;
+              enable <= penable_s;
+              penable <= penable_s;
+              pwrite <= pwrite_s;
+              pstrb <= pstrb_s;
+              paddr <= paddr_s;
+              pwdata <= pwdata_s;
+              pslverr_s_rm <= 1'b0;               
+              if (enable) begin
+                pready_s <= pready_icn;
                 pslverr_s_icn <= pslverr_icn;
-                pslverr_s_rm <= 1'b0;
-                pready_s <= 1'b0;
-              end         
-              else begin
-                state <= UNLOCKED;
-                psel <= 2'b00;
-                penable <= 1'b0;
-                pready_s <= pready_icn; 
-                pslverr_s_icn <= pslverr_icn;            
+                prdata_s <= prdata_icn;
               end
             end
           end
@@ -177,6 +160,7 @@ module secure_fsm(
             pready_s <= 1'b0;
             pslverr_s_rm <= 1'b0;
             pslverr_s_icn <= 1'b0;
+            enable <= 1'b0;
           end
         end
       endcase
