@@ -67,7 +67,8 @@ spi_data_path spi_data_path (  .clk(clk),
                                .wdata(wdata),
                                .cs_n_o(cs_n_o),
                                .miso_start(miso_start),
-                               .status_ready(status_ready)
+                               .status_ready(status_ready),
+                               .rdata_read (rdata_read)
                                
 );
 
@@ -93,7 +94,8 @@ control_fsm control_fsm ( .clk(clk),
                           .pwdata_s(pwdata_s),
                           .rdata(rdata),
                           .err(err),
-                          .status_ready(status_ready)
+                          .status_ready(status_ready),
+                          .rdata_read(rdata_read)
 );
 
 

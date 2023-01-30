@@ -4,6 +4,7 @@ module control_fsm(
   input address_ready,
   input status_ready,
   input data_ready,
+  input rdata_read,
   input [19:0] addr,
   input [3:0] status,
   input [15:0] wdata,
@@ -103,7 +104,7 @@ module control_fsm(
         if (cs_flag)
           next = IDLE;
         else begin
-          if (data_ready) begin
+          if (rdata_read) begin
             if (status[1])
               next = SETUP_RD;
             else 
@@ -116,12 +117,18 @@ module control_fsm(
         if (cs_flag)
           next = IDLE;
         else begin
-          if (data_ready) begin
+          if (rdata_read)
+            if (status[1]) begin
+              if(!status[2]) begin
+                next = SETUP_RD;
+              end
+            end
+            else
+              next = ERROR;
+          else if (data_ready) begin
             if (status[1]) begin
               if (status[2])
                 next = SETUP_WR;
-              else
-                next = SETUP_RD;
             end
             else 
               next = IDLE;

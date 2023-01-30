@@ -13,7 +13,8 @@ module spi_data_path (input clk,
                       output reg [15:0] wdata,
                       output reg cs_n_o,
                       output reg miso_start,
-                      output reg status_ready
+                      output reg status_ready,
+                      output reg rdata_read
 
 );
 //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -302,6 +303,7 @@ always @(posedge clk or negedge reset_n)
       address_ready <= 1'b0;
       miso_start    <= 1'b0;
       status_ready    <= 1'b0;
+      rdata_read <= 1'b0;
     end  
   else
     begin
@@ -311,6 +313,8 @@ always @(posedge clk or negedge reset_n)
                         (cnt == 30 && posedge_sclk && mod_2)||
                         (cnt == 28 && posedge_sclk && mod_4));
       status_ready <= (cnt == 24 && posedge_sclk);
+      rdata_read <= (cnt == 36 && posedge_sclk);
+      
     end
 
 endmodule

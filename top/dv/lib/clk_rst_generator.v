@@ -6,16 +6,17 @@ module clk_rst_generator #(
   output reg reset_n
 );
 
-  initial begin
-    clk <= 1'b0;
-    reset_n <= 1'b0;
-    #(RST_DURATION_NS/1ns);   
-    reset_n <= 1'b1;
-  end          
+  initial 
+    begin
+      clk <= 1'b0;
+      reset_n <= 1'b0;
+      #(RST_DURATION_NS/1ns);   
+      reset_n <= 1'b1;
+    end          
 
-  always begin 
-    #(CLK_PERIOD_NS/2ns);    
-    clk <= ~clk;
-  end 
-
+  always 
+    begin 
+      #(CLK_PERIOD_NS/2ns);    
+      clk <= ~clk;
+    end 
 endmodule 

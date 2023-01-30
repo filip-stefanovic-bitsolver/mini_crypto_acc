@@ -21,26 +21,22 @@ module dv_spi_master(
     input logic        [15:0] din,
     input logic        burst = 0,
     //input logic        result_en,
-    output logic       [15:0] result
+    output logic       [15:0] result_w
   );
   begin
-       if (num_of_lanes == 1)
-          spi_mode = 2'b01;
-       else if (num_of_lanes == 2)
-          spi_mode = 2'b10;
-       else if (num_of_lanes == 4)
-          spi_mode = 2'b11;    
-       else   
-          spi_mode = 2'b00; 
-       cs_n = 0;
-
+    if (num_of_lanes == 1)
+      spi_mode = 2'b01;
+    else if (num_of_lanes == 2)
+      spi_mode = 2'b10;
+    else if (num_of_lanes == 4)
+      spi_mode = 2'b11;    
+    else   
+      spi_mode = 2'b00; 
+    cs_n = 0;
     // for (int i=0;i<num_of_lanes;i++)
     //   mosi[i] = din[i];
-
     $display ("driving %4b on MOSI", mosi);
-    
     #(sclk_period_ns/2ns); //TODO add configurable delay here?
-
     for (int i=0;i<16;i+=num_of_lanes)
     begin
       sclk = 1;
@@ -50,25 +46,40 @@ module dv_spi_master(
       #(sclk_period_ns/2ns);
       sclk = 1'b0; 
       //sample MISO at negedge
- 
       //if (result_en) begin
-        for (int j=0;j<num_of_lanes;j++)
-          result[i+j] = miso[j];
+      if (i>=0 && i<16 && (num_of_lanes == 1)) 
+        begin
+          for (int j=0;j<num_of_lanes;j++)
+            result_w[i+j] = miso[j];
         end
-      #(sclk_period_ns/2ns);
-    //end
+        if (i>=0 && i<16 && (num_of_lanes == 2)) 
+        begin
+          for (int j=0;j<num_of_lanes;j++)
+            result_w[i+j] = miso[j];
+        end
+        if (i>=0 && i<16 && (num_of_lanes == 4)) 
+        begin
+          for (int j=0;j<num_of_lanes;j++)
+            result_w[i+j] = miso[j];
+        end
+        //end
+        #(sclk_period_ns/2ns);
+    end
     sclk = 1;
     #(sclk_period_ns/2ns);
+    // if (num_of_lanes == 1) 
+    //   result_w[15] = miso[0];
+    // else if (num_of_lanes == 2)
+    //   result_w[15:14] = miso[1:0];
+    // else if (num_of_lanes == 4) 
+    //   result_w[15:12] = miso[3:0];
     sclk = 1'b0; 
-
     #(sclk_period_ns/2ns);//TODO add configurable delay here?
     if (burst == 1'b0)
       cs_n = 1;
-    mosi = 'z;
+      mosi = 'z;
   end
   endtask
-
-  
 
   task drive_dword(
     input int          num_of_lanes,
@@ -79,23 +90,19 @@ module dv_spi_master(
     output reg       [15:0] result
   );
   begin
-     if (num_of_lanes == 1)
-          spi_mode = 2'b01;
-       else if (num_of_lanes == 2)
-          spi_mode = 2'b10;
-       else if (num_of_lanes == 4)
-          spi_mode = 2'b11;    
-       else   
-          spi_mode = 2'b00;
-       cs_n = 0;
-
+    if (num_of_lanes == 1)
+        spi_mode = 2'b01;
+      else if (num_of_lanes == 2)
+        spi_mode = 2'b10;
+      else if (num_of_lanes == 4)
+        spi_mode = 2'b11;    
+      else   
+        spi_mode = 2'b00;
+      cs_n = 0;
     // for (int i=0;i<num_of_lanes;i++)
     //   mosi[i] = din[i];
-
     $display ("driving %4b on MOSI", mosi);
-    
     #(sclk_period_ns/2ns); //TODO add configurable delay here?
-
     for (int i=0;i<48;i+=num_of_lanes)
     begin
       sclk = 1;
@@ -106,37 +113,37 @@ module dv_spi_master(
       sclk = 1'b0; 
       //sample MOSI at negedge
       //if (result_en) begin
-        if (i>=33 && i<48 && (num_of_lanes == 1)) begin
-          for (int j=0;j<num_of_lanes;j++)
-            result[i-33+j] = miso[j];
-        end
-        if (i>=34 && i<48 && (num_of_lanes == 2)) begin
-          for (int j=0;j<num_of_lanes;j++)
-            result[i-34+j] = miso[j];
-        end
-        if (i>=36 && i<48 && (num_of_lanes == 4)) begin
-          for (int j=0;j<num_of_lanes;j++)
-            result[i-36+j] = miso[j];
-        end
+      if (i>=32 && i<48 && (num_of_lanes == 1)) 
+      begin
+        for (int j=0;j<num_of_lanes;j++)
+          result[i-32+j] = miso[j];
+      end
+      if (i>=32 && i<48 && (num_of_lanes == 2)) 
+      begin
+        for (int j=0;j<num_of_lanes;j++)
+          result[i-32+j] = miso[j];
+      end
+      if (i>=32 && i<48 && (num_of_lanes == 4)) 
+      begin
+        for (int j=0;j<num_of_lanes;j++)
+          result[i-32+j] = miso[j];
+      end
       //end
       #(sclk_period_ns/2ns);
-
-     
     end
     sclk = 1;
     #(sclk_period_ns/2ns);
-    if (num_of_lanes == 1) 
-      result[15] = miso[0];
-    else if (num_of_lanes == 2)
-      result[15:14] = miso[1:0];
-    else if (num_of_lanes == 4) 
-      result[15:12] = miso[3:0];
+    // if (num_of_lanes == 1) 
+    //   result[15] = miso[0];
+    // else if (num_of_lanes == 2)
+    //   result[15:14] = miso[1:0];
+    // else if (num_of_lanes == 4) 
+    //   result[15:12] = miso[3:0];
     sclk = 1'b0; 
-
     #(sclk_period_ns/2ns);//TODO add configurable delay here?
     if (burst == 1'b0)
       cs_n = 1;
-    mosi = 'z;
+      mosi = 'z;
   end
   endtask
 

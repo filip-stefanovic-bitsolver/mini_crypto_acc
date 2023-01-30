@@ -17,18 +17,12 @@ reg pslverr_icn;
 wire [1:0] psel;
 wire [19:0] paddr;
 wire [15:0] pwdata;
-//wire [15:0] rdata;
-//wire [3:0] status;
 wire [15:0] prdata_s;
 wire [15:0] prdata;
-//wire [1:0] psel_s;
 wire [1:0] pstrb;
-//wire [19:0] paddr_s;
-//wire [15:0] pwdata_s;
 wire [3:0] mosi;
 wire [3:0] miso;
 wire [1:0] spi_mode;
-
 
 clk_rst_generator clk_rst_generator_i (
   .clk(clk), 
@@ -71,7 +65,6 @@ dv_spi_master dv_spi_master_i (
   .spi_mode(spi_mode)
 );
 
-
 //dv_mem_model dv_mem_model_i  (
 //  .clk(clk),   //clock
 //  .we(pwrite),    //write-enable, active high
@@ -79,7 +72,6 @@ dv_spi_master dv_spi_master_i (
 //  .din(pwdata),   //input data bus
 //  .dout(prdata)   //output data bus
 //);
-
 
 spi_slave spi_slave_i ( 
   .clk(clk),
@@ -94,7 +86,6 @@ spi_slave spi_slave_i (
   .prdata_icn(prdata_icn),
   .pready_icn(pready_icn),
   .pslverr_icn(pslverr_icn),
-
   .miso(miso),
   .psel(psel),
   .penable(penable),
@@ -104,5 +95,4 @@ spi_slave spi_slave_i (
   .pwdata(pwdata),
   .err(err)
 );
-
 endmodule

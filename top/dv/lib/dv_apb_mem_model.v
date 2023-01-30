@@ -33,7 +33,6 @@ generate
   assign pready = 1'b1;
   assign pslverr = 1'b0;
 
-
   end : gen_dv_mem_model
   else 
   begin : gen_random_implementation

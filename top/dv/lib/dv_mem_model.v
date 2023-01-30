@@ -1,4 +1,3 @@
-
 // define DUMP_MEMS to enable memory dumping
 //`define DUMP_MEMS
 module dv_mem_model #(
@@ -15,17 +14,17 @@ module dv_mem_model #(
   reg [DW-1:0][2**AW-1:0]mem;
   reg [DW-1:0] dout_q;
   
- 
 `ifdef DUMP_MEMS
 `endif 
 
   always @(posedge clk)
-    if (we) begin
+    if (we) 
+    begin
       mem[addr] <= din;
-    end else begin
+    end else 
+    begin
       dout_q <= mem[addr];
     end
-
   assign  dout = dout_q;
 
 endmodule
